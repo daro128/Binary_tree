@@ -56,12 +56,23 @@ private:
             if (m->matchId == matchId) return m;
         return nullptr;
     }
+    
 
     int computeRound(Node* n) {
-        if (!n) return 0;
-        if (!n->left && !n->right) return 1; // leaf round
-        return 1 + max(computeRound(n->left), computeRound(n->right));
+    if (!root) return 0;
+    queue<pair<Node*, int>> q;
+    q.push({root, 1});
+    while (!q.empty()) {
+        pair<Node*, int> pr = q.front();
+        Node* cur = pr.first;
+        int r = pr.second;
+        q.pop();
+        if (cur == n) return r; // return round of this match
+        if (cur->left) q.push({cur->left, r+1});
+        if (cur->right) q.push({cur->right, r+1});
     }
+    return 0;
+}
 
     Node* LCA(Node* n, const string& p1, const string& p2) {
         if (!n) return nullptr;
